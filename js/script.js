@@ -11,7 +11,7 @@ For assistance:
    Reach out in your Slack community: https://treehouse-fsjs-102.slack.com/app_redirect?channel=unit-2
 */
 
-
+const linkList = document.querySelector(".link-list")
 
 /*
 Create the `showPage` function
@@ -30,12 +30,13 @@ function showPage(list, page){
    // iterate through length of list and index into each student data object
    for(let i = 0; i < list.length; i++){
       if (i >= startIndex && i < endIndex){
-         const student = data[i]
+         const student = list[i]
+         const photo = list[i].picture
          
          const studentItem =`
                <li class="student-item cf">
                   <div class="student-details">
-                     <img class="avatar" src="https://randomuser.me/api/portraits/women/25.jpg" alt="Profile Picture">
+                     <img class="avatar" src="${photo.large}" alt="Profile Picture">
                      <h3>${student.name.first} ${student.name.last}</h3>
                      <span class="email">${student.email}</span>
                   </div>
@@ -58,7 +59,6 @@ This function will create and insert/append the elements needed for the paginati
 
 function addPagination(list){
    const numOfPages = Math.ceil(list.length / 9)
-   const linkList = document.querySelector(".link-list")
    linkList.innerHTML = ''
 
    // add each page number by iterating through the number of pages needed
@@ -88,7 +88,6 @@ function addPagination(list){
 }
 
 // add search bar
-function addSearchBar(){
    // create a label element
    const label = document.createElement('label');
    label.setAttribute('for', 'search');
@@ -122,11 +121,10 @@ function addSearchBar(){
    // place search bar at top of dom 
    const header = document.querySelector('.header');
    header.appendChild(label)
-}
+
 
 function performSearch() {
-   const searchInput = document.getElementById('search');
-   const searchValue = searchInput.value.toLowerCase();
+   const searchValue = input.value.toLowerCase();
    const matchingStudents = [];
    
    // filter resultes based on name
@@ -142,11 +140,10 @@ function performSearch() {
       noResultsMessage();
     } else {
       removeNoResultsMessage();
+      //  show results and paginate 
+      showPage(matchingStudents, 1);
+      addPagination(matchingStudents);
     }
-
-       //  show results and paginate 
-   showPage(matchingStudents, 1);
-   addPagination(matchingStudents);
  
   }
    
@@ -156,6 +153,8 @@ function performSearch() {
       const noResultsText = document.createElement('p');
       noResultsText.textContent = 'No results found.';
       noResultsText.classList.add('no-results-message');
+      studentList.innerHTML = " "
+      linkList.innerHTML = " "
       studentList.appendChild(noResultsText);
    }
    
@@ -168,7 +167,7 @@ function performSearch() {
     }
 
 // Call functions
-addSearchBar();
+
 showPage(data, 1);
 addPagination(data);
 
@@ -176,5 +175,4 @@ addPagination(data);
 const search = document.getElementById('search');
 search.addEventListener('input', () => {performSearch();})
 
-const button = document.querySelector('student-search button')
 button.addEventListener('click', () => {performSearch();})
